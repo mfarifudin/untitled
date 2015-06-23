@@ -1,8 +1,6 @@
-__author__ = 'Muh Fatkhan Arifudin'
 import tweepy
 import sys
 import jsonpickle
-import os
 
 # Replace the API_KEY and API_SECRET with your application's key and secret.
 ckey = "hRNLzt3eIxSmSdyR7AZYo7tX6"

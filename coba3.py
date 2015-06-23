@@ -1,9 +1,6 @@
-__author__ = 'Muh Fatkhan Arifudin'
 import tweepy
 import sys
 import mysql.connector
-import jsonpickle
-import json
 import time
 
 

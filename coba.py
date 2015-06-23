@@ -1,11 +1,9 @@
-__author__ = 'Muh Fatkhan Arifudin'
 import tweepy
 from tweepy import Stream
 from tweepy.streaming import StreamListener
 import mysql.connector
 import time
 import json
-import sys
 
 conn = mysql.connector.connect(user='root', password='', host='127.0.0.1',database='tweets')
 
