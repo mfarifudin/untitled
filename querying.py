@@ -1,14 +1,47 @@
-import mysql.connector
+import codecs
+import string
+import re
+import json
+import sys
 
-conn = mysql.connector.connect(user='root', password='', host='127.0.0.1', database='tweets')
-c = conn.cursor()
+sys.stdout = codecs.getwriter('utf8')(sys.stdout.buffer)
 
-query = ("SELECT post FROM jokowi LIMIT 10")
-c.execute(query)
+emoticons_str = r"""
+    (?:
+        [:=;] # Eyes
+        [oO\-]? # Nose (optional)
+        [D\)\]\(\]/\\OpP] # Mouth
+    )"""
 
-for post in c:
-    result = ''.join([i for i in post if not i.isdigit()])
-    print(result)
+regex_str = [
+    emoticons_str,
+    r'<[^>]+>', # HTML tags
+    r'(?:@[\w_]+)', # @-mentions
+    r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)", # hash-tags
+    r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
 
-c.close()
-conn.close()
+    r'(?:(?:\d+,?)+(?:\.?\d+)?)', # numbers
+    r"(?:[a-z][a-z'\-_]+[a-z])", # words with - and '
+    r'(?:[\w_]+)', # other words
+    r'(?:\S)' # anything else
+]
+
+tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
+emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
+
+def tokenize(s):
+    return tokens_re.findall(s)
+
+def preprocess(s, lowercase=False):
+    tokens = tokenize(s)
+    if lowercase:
+        tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
+    return tokens
+
+
+with open('jokowi.txt', 'r') as f:
+    for line in f:
+        tweet = json.loads(line)
+        tokens=preprocess(tweet['text'])
+
+        print(tokens)
