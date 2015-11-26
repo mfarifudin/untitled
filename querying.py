@@ -38,10 +38,14 @@ def preprocess(s, lowercase=False):
         tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
     return tokens
 
-
 with open('jokowi.txt', 'r') as f:
     for line in f:
         tweet = json.loads(line)
         tokens=preprocess(tweet['text'])
 
         print(tokens)
+
+def stopword():
+    with open('stopword_id.txt','r') as f:
+        for line in f:
+            stop = 
