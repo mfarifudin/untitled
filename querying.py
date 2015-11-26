@@ -1,11 +1,15 @@
 import codecs
-import string
+from nltk.corpus import stopwords
 import re
 import json
 import sys
 
 sys.stdout = codecs.getwriter('utf8')(sys.stdout.buffer)
 
+stop_word = open('stopwords_id.txt','r')
+list_stopword = stop_word.read().split(',')
+#list_stopword = stop_word.readlines()
+stop = stopwords.words('english')
 emoticons_str = r"""
     (?:
         [:=;] # Eyes
@@ -42,10 +46,7 @@ with open('jokowi.txt', 'r') as f:
     for line in f:
         tweet = json.loads(line)
         tokens=preprocess(tweet['text'])
-
-        print(tokens)
-
-def stopword():
-    with open('stopword_id.txt','r') as f:
-        for line in f:
-            stop = 
+        removed_stopword = [term for term in tokens if term not in list_stopword]
+        #print(removed_stopword)
+print(stop)
+print(list_stopword)
